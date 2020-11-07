@@ -1,4 +1,4 @@
-module github.com/Lunkov/lib-cache.git
+module github.com/Lunkov/lib-cache
 
 go 1.13
 
