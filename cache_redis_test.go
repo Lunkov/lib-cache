@@ -159,9 +159,7 @@ func BenchmarkRedis(b *testing.B) {
         "got", ok,
       )
     }
-    //log.Printf("LOG: GET: %s => %v\n", code, ipers1)
     tp, _ := ipers1.(*Person)
-    //log.Printf("LOG: GET: %s => %v\n", code, tp)
     if tp.ID != info.ID {
       b.Error(
         "For", "Person UUID",

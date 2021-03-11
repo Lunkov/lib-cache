@@ -28,11 +28,6 @@ const (
 	// passing in the same expiration duration as was given to New() or
 	// NewFrom() when the cache was created (e.g. 5 minutes.)
 	DefaultExpiration time.Duration = 0
-  
-  modeUndef   = 0
-  modeMap     = 1
-  modeSyncMap = 2
-  modeRedis   = 3
 )
 
 type Cache struct {
@@ -74,6 +69,8 @@ func New(mode string, expiryTime int64, URL string, MaxConnections int) ICache {
   switch mode {
     case "redis":
         return newRedis(mode, expiryTime, URL, MaxConnections)
+    case "aerospike":
+        return newAerospike(mode, expiryTime, URL, MaxConnections)
     case "map":
         return newMap(mode, expiryTime, URL, MaxConnections)
     case "syncmap":
