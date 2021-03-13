@@ -2,7 +2,6 @@ package cache
 
 import (
   "time"
-  "reflect"
   "github.com/golang/glog"
 )
 
