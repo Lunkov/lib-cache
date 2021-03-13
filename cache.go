@@ -44,18 +44,6 @@ func (c *Cache) Clear() {}
 func (c *Cache) Remove(k string) {}
 func (c *Cache) Close() {}
 
-func GetType(myvar interface{}) string {
-  t := reflect.TypeOf(myvar)
-  if t == nil {
-    return "<nil>"
-  }
-  if t.Kind() == reflect.Ptr {
-    return "*" + t.Elem().Name()
-  } else {
-    return t.Name()
-  }
-}
-
 ////
 // Init
 ////
