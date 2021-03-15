@@ -6,6 +6,7 @@ import (
   
   "flag"
   "fmt"
+  "strconv"
   "github.com/google/uuid"
 )
 
@@ -69,7 +70,7 @@ func TestCacheSyncMap(t *testing.T) {
 }
 
 
-func BenchmarkCacheSyncMap(b *testing.B) {
+func BenchmarkSyncMap(b *testing.B) {
 	flag.Set("alsologtostderr", "true")
 	flag.Set("log_dir", ".")
 	flag.Set("v", "0")
@@ -81,38 +82,19 @@ func BenchmarkCacheSyncMap(b *testing.B) {
   c1.Clear()
 
   b.ResetTimer()
-  for i := 0; i < b.N; i++ {
-    count := c1.Count()
-    count ++
-  }
-  for i := 0; i < b.N; i++ {
-    code := fmt.Sprintf("code%d", i)
-    c1.Set(code, info)
-  }
-  /*
-  count := c1.Count()
-  if count != int64(b.N) {
-    b.Error(
-      "For", "Count After Add",
-      "expected", int64(b.N),
-      "got", count,
-    )
-  }*/
-
-  for i := 0; i < b.N; i++ {
-    code := fmt.Sprintf("code%d", i)
-
-    var ipers15 Person
-    ipers11, _ := c1.Get(code, &ipers15)
-    ipers, _ := ipers11.(*Person)
-    if ipers != nil {
-      b.Error(
-        "For", "Person UUID",
-        "expected", info,
-        "got", ipers,
-      )
-    }
-
+  for i := 1; i <= 8; i *= 2 {
+		b.Run(strconv.Itoa(i), func(b *testing.B) {
+			b.SetParallelism(i)
+      b.RunParallel(func(pb *testing.PB) {
+        for pb.Next() {
+          code := fmt.Sprintf("code%d", i)
+          c1.Set(code, info)
+          var ipers5 Person
+          _, ok := c1.Get(code, &ipers5)
+          assert.Equal(b, true, ok)
+        }
+      })
+    })
   }
  
   c1.Close()

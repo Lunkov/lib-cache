@@ -6,8 +6,11 @@ import (
   "github.com/stretchr/testify/assert"
   
   "fmt"
+  "strconv"
   "github.com/google/uuid"
   "github.com/golang/glog"
+  
+  "github.com/Lunkov/lib-ref"
 )
 
 
@@ -34,10 +37,10 @@ func TestCacheAerospike(t *testing.T) {
   var ipers15, ipers Person
   ipers11, err := c1.Get(sessionToken, &ipers15)
   // ipers, ok := ipers11.(*Person)
-  if GetType(ipers11) == "Person" {
+  if ref.GetType(ipers11) == "Person" {
     ipers, _ = ipers11.(Person)
   }
-  if GetType(ipers11) == "*Person" {
+  if ref.GetType(ipers11) == "*Person" {
     ipers2, _ := ipers11.(*Person)
     ipers = *ipers2
   }
@@ -91,37 +94,21 @@ func BenchmarkAerospike(b *testing.B) {
   c1.Clear()
 
   b.ResetTimer()
-  for i := 0; i < b.N; i++ {
-    count := c1.Count()
-    count ++
+  for i := 1; i <= 8; i *= 2 {
+		b.Run(strconv.Itoa(i), func(b *testing.B) {
+			b.SetParallelism(i)
+      b.RunParallel(func(pb *testing.PB) {
+        for pb.Next() {
+          code := fmt.Sprintf("code%d", i)
+          c1.Set(code, info)
+          var ipers5 Person
+          _, ok := c1.Get(code, &ipers5)
+          assert.Equal(b, true, ok)
+        }
+      })
+    })
   }
   
-  for i := 0; i < b.N; i++ {
-    code := fmt.Sprintf("code%d", i)
-    c1.Set(code, info)
-  }
-
-  for i := 0; i < b.N; i++ {
-    code := fmt.Sprintf("code%d", i)
-    var ipers5 Person
-    ipers1, ok := c1.Get(code, &ipers5)
-    if !ok {
-      b.Error(
-        "For", "c1.Get",
-        "expected", true,
-        "got", ok,
-      )
-    }
-    tp, _ := ipers1.(*Person)
-    if tp.ID != info.ID {
-      b.Error(
-        "For", "Person UUID",
-        "expected", info.ID,
-        "got", tp.ID,
-      )
-    }
-  }
- 
   c1.Close()
   
 }
