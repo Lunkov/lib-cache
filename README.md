@@ -50,7 +50,7 @@ BenchmarkRedis/8-4     	  131264	     88499 ns/op	    2233 B/op	      33 allocs/
 
 Table of compare performance ns/op
 
-|                  | map  | sync.Map | Aerospike | Redis  |
+|                  | map with sync.RWMutex | sync.Map | Aerospike | Redis  |
 |------------------|:-----|:----:|-------:|-------:|
 | BenchmarkMap/1-4 | 3660 | 4553 | 116237 | 122826 |
 | BenchmarkMap/2-4 | 3741 | 4958 |  94596 | 104896 |
