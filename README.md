@@ -24,13 +24,31 @@ web mallocgc
 
 Intel® Core™ i5 CPU 760 @ 2.80GHz × 4 (https://www.cpubenchmark.net/cpu.php?cpu=Intel+Core+i5-760S+%40+2.53GHz&id=782)
 
+## JSON vs GOB
+```
+BenchmarkJSON-4   	  770727	     15493 ns/op
+BenchmarkGOB-4   	  145520	     84069 ns/op
+```
+
+Table of compare performance ns/op
+
+|               |  JSON  |   GOB  |
+|---------------|-------:|-------:|
+| Benchmark/4-4 | 15 493 | 84 069 |
+
+
+## Tests Storages
+
+
 ```
 go test -bench=. -benchmem -benchtime=10s -cpuprofile=cpu.out -memprofile=mem.out
 
-BenchmarkMap/1-4       	 3241263	      3660 ns/op	     552 B/op	       6 allocs/op
-BenchmarkMap/2-4       	 3252266	      3741 ns/op	     552 B/op	       6 allocs/op
-BenchmarkMap/4-4       	 3148250	      3801 ns/op	     552 B/op	       6 allocs/op
-BenchmarkMap/8-4       	 3098610	      3909 ns/op	     552 B/op	       6 allocs/op
+BenchmarkMap-4               373377 	     2888 ns/op
+
+BenchmarkMutexMap/1-4  	 3241263	      3660 ns/op	     552 B/op	       6 allocs/op
+BenchmarkMutexMap/2-4  	 3252266	      3741 ns/op	     552 B/op	       6 allocs/op
+BenchmarkMutexMap/4-4  	 3148250	      3801 ns/op	     552 B/op	       6 allocs/op
+BenchmarkMutexMap/8-4  	 3098610	      3909 ns/op	     552 B/op	       6 allocs/op
 
 BenchmarkSyncMap/1-4   	 2677140	      4553 ns/op	     616 B/op	       9 allocs/op
 BenchmarkSyncMap/2-4   	 2502535	      4958 ns/op	     616 B/op	       9 allocs/op
@@ -46,14 +64,19 @@ BenchmarkRedis/1-4     	  105042	    122826 ns/op	    2236 B/op	      33 allocs/
 BenchmarkRedis/2-4     	  111357	    104896 ns/op	    2233 B/op	      33 allocs/op
 BenchmarkRedis/4-4     	  131476	     94707 ns/op	    2233 B/op	      33 allocs/op
 BenchmarkRedis/8-4     	  131264	     88499 ns/op	    2233 B/op	      33 allocs/op
+
+BenchmarkPostgreSQL/1-4      493	   2210216 ns/op
+BenchmarkPostgreSQL/2-4 	 494	   2259960 ns/op
+BenchmarkPostgreSQL/4-4 	 458	   2378314 ns/op
+BenchmarkPostgreSQL/8-4 	 441	   2533566 ns/op
 ```
 
 Table of compare performance ns/op
 
-|                  | map with sync.RWMutex | sync.Map | Aerospike | Redis  |
-|------------------|------:|------:|--------:|--------:|
-| BenchmarkMap/1-4 | 3 660 | 4 553 | 116 237 | 122 826 |
-| BenchmarkMap/2-4 | 3 741 | 4 958 |  94 596 | 104 896 |
-| BenchmarkMap/4-4 | 3 801 | 4 824 |  87 570 |  94 707 |
-| BenchmarkMap/8-4 | 3 909 | 5 186 |  86 481 |  88 499 |
+|                  | Only map | map with sync.RWMutex | sync.Map | Aerospike | Redis  | PostgreSQL |
+|------------------|------:|------:|--------:|--------:|--------:|--------:|
+| Benchmark/1-4 | 2 888 | 3 660 | 4 553 | 116 237 | 122 826 | 2 210 216 |
+| Benchmark/2-4 | | 3 741 | 4 958 |  94 596 | 104 896 | 2 259 960 |
+| Benchmark/4-4 | | 3 801 | 4 824 |  87 570 |  94 707 | 2 378 314 |
+| Benchmark/8-4 | | 3 909 | 5 186 |  86 481 |  88 499 | 2 533 566 |
 

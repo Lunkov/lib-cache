@@ -146,7 +146,7 @@ func (c *CacheRedis) Count() int64 {
   defer redisConn.Close()
   data, err := redisConn.Do("DBSIZE")
   if err != nil {
-    glog.Infof("ERR: Count: %v \n", err)
+    glog.Infof("ERR: REDIS: Count: %v", err)
     return db_size
   }
   if data == nil {

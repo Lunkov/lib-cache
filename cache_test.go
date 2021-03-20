@@ -4,10 +4,13 @@ import (
   "testing"
   "github.com/stretchr/testify/assert"
   
+  "bytes"
   "time"
+  "encoding/gob"
+  "encoding/json"
+
   "github.com/google/uuid"
   "github.com/golang/glog"
-  "encoding/json"
 )
 
 type Person struct {
@@ -56,4 +59,31 @@ func TestLoadUnkonwn(t *testing.T) {
 
   c1 := New("unknown121212", 0, "", 10)
   assert.Equal(t, nil, c1)
+}
+
+func BenchmarkJSON(b *testing.B) {
+  var p2 Person
+  uid, _ := uuid.Parse("abbf4958-17d9-56e3-afe4-30f21ebd1513")
+  p := Person{ID: uid, Login: "Max", EMail: "max@aaa.ru", Groups: []string{"g1", "g2"} }
+  for i := 0; i < b.N; i++ {
+    buf, _ := json.Marshal(p)
+    json.Unmarshal([]byte(buf), &p2)
+    assert.Equal(b, p.Login, p2.Login)
+  }
+}
+
+func BenchmarkGOB(b *testing.B) {
+  var p2 Person
+  uid, _ := uuid.Parse("abbf4958-17d9-56e3-afe4-30f21ebd1513")
+  p := Person{ID: uid, Login: "Max", EMail: "max@aaa.ru", Groups: []string{"g1", "g2"} }
+  buf := bytes.NewBuffer(nil)
+  for i := 0; i < b.N; i++ {
+    // encode
+    enc := gob.NewEncoder(buf)
+    enc.Encode(&p)
+    // decode
+    dec := gob.NewDecoder(buf)
+    dec.Decode(&p2)
+    assert.Equal(b, p.Login, p2.Login)
+  }
 }

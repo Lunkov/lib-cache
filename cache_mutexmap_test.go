@@ -6,13 +6,14 @@ import (
   
   "flag"
   "fmt"
+  "strconv"
   "github.com/google/uuid"
   "github.com/golang/glog"
   
   "github.com/Lunkov/lib-ref"
 )
 
-func TestLoadMap(t *testing.T) {
+func TestLoadMutexMap(t *testing.T) {
 	flag.Set("alsologtostderr", "true")
 	flag.Set("log_dir", ".")
 	flag.Set("v", "9")
@@ -20,7 +21,7 @@ func TestLoadMap(t *testing.T) {
 
   var info Person
 
-  c1 := New("map", 0, "", 10)
+  c1 := New("mutexmap", 0, "", 10)
   c1.Clear()
   assert.Equal(t, int64(0), c1.Count())
   assert.Equal(t, false, c1.Check("1111"))
@@ -80,7 +81,7 @@ func TestLoadMap(t *testing.T) {
 
 }
 
-func BenchmarkMap(b *testing.B) {
+func BenchmarkMutexMap(b *testing.B) {
 	flag.Set("alsologtostderr", "true")
 	flag.Set("log_dir", ".")
 	flag.Set("v", "0")
@@ -88,16 +89,23 @@ func BenchmarkMap(b *testing.B) {
   
   uid, _ := uuid.Parse("00000002-0003-0004-0005-000000000001")
   info := Person{ID: uid, Login: "Max", EMail: "max@aaa.ru", Groups: []string{"g1", "g2"} }
-  c1 := New("map", 0, "", 0)
+  c1 := New("mutexmap", 0, "", 0)
   c1.Clear()
 
   b.ResetTimer()
-  for i := 0; i < b.N; i++ {
-    code := fmt.Sprintf("code%d", i)
-    c1.Set(code, info)
-    var ipers5 Person
-    _, ok := c1.Get(code, &ipers5)
-    assert.Equal(b, true, ok)
+    for i := 1; i <= 8; i *= 2 {
+		b.Run(strconv.Itoa(i), func(b *testing.B) {
+			b.SetParallelism(i)
+      b.RunParallel(func(pb *testing.PB) {
+        for pb.Next() {
+          code := fmt.Sprintf("code%d", i)
+          c1.Set(code, info)
+          var ipers5 Person
+          _, ok := c1.Get(code, &ipers5)
+          assert.Equal(b, true, ok)
+        }
+      })
+    })
   }
  
   c1.Close()

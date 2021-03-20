@@ -47,21 +47,25 @@ func (c *Cache) Close() {}
 // Init
 ////
 func New(mode string, expiryTime int64, URL string, MaxConnections int) ICache {
-  glog.Infof("LOG: CACHE: Init")
-  glog.Infof("LOG: CACHE: Mode is %s", mode)
-  glog.Infof("LOG: CACHE: Expiry Time = %d", expiryTime)
+  glog.Infof("LOG: CACHE: Init (mode=%s, ExpiryTime=%d)", mode, expiryTime)
   if expiryTime == 0 {
 		expiryTime = -1
 	}
   switch mode {
+    case "map":
+        return newMap(mode, expiryTime, URL, MaxConnections)
+    case "mutexmap":
+        return newMutexMap(mode, expiryTime, URL, MaxConnections)
+    case "syncmap":
+        return newSyncMap(mode, expiryTime, URL, MaxConnections)
     case "redis":
         return newRedis(mode, expiryTime, URL, MaxConnections)
     case "aerospike":
         return newAerospike(mode, expiryTime, URL, MaxConnections)
-    case "map":
-        return newMap(mode, expiryTime, URL, MaxConnections)
-    case "syncmap":
-        return newSyncMap(mode, expiryTime, URL, MaxConnections)
+    case "mongodb":
+        return newMongoDB(mode, expiryTime, URL, MaxConnections)
+    case "postgresql":
+        return newPostgreSQL(mode, expiryTime, URL, MaxConnections)
   }
   return nil
 }
