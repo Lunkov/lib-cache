@@ -21,16 +21,16 @@ type ICache interface {
 }
 
 const (
-	// For use with functions that take an expiration time.
-	NoExpiration time.Duration = -1
-	// For use with functions that take an expiration time. Equivalent to
-	// passing in the same expiration duration as was given to New() or
-	// NewFrom() when the cache was created (e.g. 5 minutes.)
-	DefaultExpiration time.Duration = 0
+  // For use with functions that take an expiration time.
+  NoExpiration time.Duration = -1
+  // For use with functions that take an expiration time. Equivalent to
+  // passing in the same expiration duration as was given to New() or
+  // NewFrom() when the cache was created (e.g. 5 minutes.)
+  DefaultExpiration time.Duration = 0
 )
 
 type Cache struct {
-	defaultExpiration   int64
+  defaultExpiration   int64
 }
 
 func (c *Cache) HasError() bool  { return true }
@@ -49,8 +49,8 @@ func (c *Cache) Close() {}
 func New(mode string, expiryTime int64, URL string, MaxConnections int) ICache {
   glog.Infof("LOG: CACHE: Init (mode=%s, ExpiryTime=%d)", mode, expiryTime)
   if expiryTime == 0 {
-		expiryTime = -1
-	}
+    expiryTime = -1
+  }
   switch mode {
     case "map":
         return newMap(mode, expiryTime, URL, MaxConnections)
@@ -62,8 +62,9 @@ func New(mode string, expiryTime int64, URL string, MaxConnections int) ICache {
         return newRedis(mode, expiryTime, URL, MaxConnections)
     case "aerospike":
         return newAerospike(mode, expiryTime, URL, MaxConnections)
-    case "mongodb":
-        return newMongoDB(mode, expiryTime, URL, MaxConnections)
+// TODO
+//    case "mongodb":
+//        return newMongoDB(mode, expiryTime, URL, MaxConnections)
     case "postgresql":
         return newPostgreSQL(mode, expiryTime, URL, MaxConnections)
   }
