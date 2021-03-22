@@ -22,7 +22,7 @@ web mallocgc
 ```
 # Tests results
 
-Intel® Core™ i5 CPU 760 @ 2.80GHz × 4 (https://www.cpubenchmark.net/cpu.php?cpu=Intel+Core+i5-760S+%40+2.53GHz&id=782)
+Intel® Core™ i5 CPU 760 @ 2.80GHz × 4 (https://www.cpubenchmark.net/cpu.php?id=782)
 
 ## JSON vs GOB
 ```

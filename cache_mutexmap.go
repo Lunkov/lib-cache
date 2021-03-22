@@ -56,7 +56,7 @@ func (c *CacheMutexMap) Get(k string, obj interface{}) (interface{}, bool)  {
 		return nil, false
 	}
   if glog.V(9) {
-    glog.Infof("DBG: memGet2: (ok = %v) item=%v\n", ok, item)
+    glog.Infof("DBG: memGet2: (ok = %v) item=%v", ok, item)
   }
   if item.Expiration > 0 {
 		if time.Now().UnixNano() > item.Expiration {
@@ -66,50 +66,18 @@ func (c *CacheMutexMap) Get(k string, obj interface{}) (interface{}, bool)  {
 	}
 	c.mu.RUnlock()
   if glog.V(9) {
-    glog.Infof("LOG: memGet3: (ok = %v) item=%v\n", ok, item.Object)
-    glog.Infof("LOG: memGet4: (ok = %v) item=%v\n", ok, obj)
+    glog.Infof("LOG: memGet3: (ok = %v) item=%v", ok, item.Object)
+    glog.Infof("LOG: memGet4: (ok = %v) item=%v", ok, obj)
   }
 	return item.Object, true
-}
-/*
-func (c *CacheMutexMap) SetStr(k string, x string) {
-  var e int64
-	if c.defaultExpiration > 0 {
-		e = time.Now().Add(time.Duration(c.defaultExpiration) * time.Second).UnixNano()
-	} else {
-    e = 0
-  }
-  c.mu.Lock()
-  c.itemsStr[k] = ItemStr{
-		Object:     x,
-		Expiration: e,
-	}
-  c.mu.Unlock()
 }
 
-func (c *CacheMutexMap) GetStr(k string) (string, bool)  {
-  c.mu.RLock()
-  item, ok := c.itemsStr[k]
-  if !ok {
-		c.mu.RUnlock()
-		return "", false
-	}
-  if item.Expiration > 0 {
-		if time.Now().UnixNano() > item.Expiration {
-			c.mu.RUnlock()
-			return "", false
-		}
-	}
-	c.mu.RUnlock()
-	return item.Object, true
-}
-*/
 func (c *CacheMutexMap) Remove(k string) {
   c.mu.Lock()
   _, ok := c.items[k]
   if ok {
     if glog.V(9) {
-      glog.Infof("LOG: memRemove: (ok = %v) item=%v\n", ok, k)
+      glog.Infof("LOG: memRemove: (ok = %v) item=%v", ok, k)
     }
     delete(c.items, k);
   }
@@ -137,7 +105,7 @@ func (c *CacheMutexMap) ClearOld() {
   c.mu.Unlock()
 }
 
-func newMutexMap(mode string, expiryTime int64, URL string, MaxConnections int) ICache {
+func newMutexMap(mode string, expiryTime int64, uri string, maxConnections int) ICache {
  	c := &CacheMutexMap{
 		Cache: Cache{ defaultExpiration:  expiryTime},
     items:                    make(map[string]Item),

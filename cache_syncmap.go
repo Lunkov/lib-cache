@@ -91,7 +91,7 @@ func (c *CacheSyncMap) ClearOld() {
   })
 }
 
-func newSyncMap(mode string, expiryTime int64, URL string, MaxConnections int) ICache {
+func newSyncMap(mode string, expiryTime int64, uri string, maxConnections int) ICache {
  	c := &CacheSyncMap{
     Cache: Cache{ defaultExpiration:  expiryTime},
   }

@@ -22,9 +22,10 @@ func (c *CacheRedis) GetMode() string {
   return "redis"
 }
 
-////
+//
 // Redis Cache
-////
+//
+
 func (c *CacheRedis) SetStr(key string, x string) {
   if c.pool == nil {
     return
@@ -184,32 +185,32 @@ func (c *CacheRedis) GetAll2JSON(x interface{}) []byte {
   return res
 }
 
-func newRedis(mode string, expiryTime int64, URL string, MaxConnections int) ICache {
+func newRedis(mode string, expiryTime int64, uri string, maxConnections int) ICache {
  	c := &CacheRedis{}
-  conn, err := redis.DialURL(URL)
+  conn, err := redis.DialURL(uri)
   if err == nil {
     conn.Close()
-    c.pool = newRedisPool(URL, MaxConnections)
+    c.pool = newRedisPool(uri, maxConnections)
   } else {
     glog.Errorf("ERR: CACHE: REDIS: %v", err)
   }
   return c
 }
 
-func newRedisPool(URL string, MaxConnections int) *redis.Pool {
-  if MaxConnections < 1 {
-    MaxConnections = 100
+func newRedisPool(uri string, maxConnections int) *redis.Pool {
+  if maxConnections < 1 {
+    maxConnections = 100
   }
-  glog.Infof("LOG: CACHE: REDIS (URL='%s', Max connections = %d)", URL, MaxConnections)
+  glog.Infof("LOG: CACHE: REDIS (URL='%s', Max connections = %d)", uri, maxConnections)
   return &redis.Pool{
     // Maximum number of idle connections in the pool.
     MaxIdle: 80,
     // max number of connections
-    MaxActive: MaxConnections,
+    MaxActive: maxConnections,
     // Dial is an application supplied function for creating and
     // configuring a connection.
     Dial: func() (redis.Conn, error) {
-      c, err := redis.DialURL(URL)
+      c, err := redis.DialURL(uri)
       if err != nil {
         panic(err.Error())
       }

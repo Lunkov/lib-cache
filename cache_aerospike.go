@@ -26,9 +26,9 @@ func (c *CacheAerospike) GetMode() string {
   return "aerospike"
 }
 
-////
+//
 // Aerospike Cache
-////
+//
 
 func (c *CacheAerospike) getKey(key string) *aero.Key {
   k, err := aero.NewKey(c.Namespace, c.GetMode(), key)
@@ -100,14 +100,14 @@ func (c *CacheAerospike) GetAll2JSON(x interface{}) []byte {
   return []byte("[]")
 }
 
-func newAerospike(mode string, expiryTime int64, URL string, MaxConnections int) ICache {
-  u, erru := url.Parse(URL)
+func newAerospike(mode string, expiryTime int64, uri string, maxConnections int) ICache {
+  u, erru := url.Parse(uri)
   if erru != nil {
-    glog.Errorf("ERR: CACHE: AEROSPIKE: URL(%s): %s", URL, erru)
+    glog.Errorf("ERR: CACHE: AEROSPIKE: URL(%s): %s", uri, erru)
     return nil
   }
   if u.Scheme != "aerospike" {
-    glog.Errorf("ERR: CACHE: AEROSPIKE: URL(%s): Scheme != aerospike", URL)
+    glog.Errorf("ERR: CACHE: AEROSPIKE: URL(%s): Scheme != aerospike", uri)
     return nil
   }
   host, port, _ := net.SplitHostPort(u.Host)
@@ -128,7 +128,7 @@ func newAerospike(mode string, expiryTime int64, URL string, MaxConnections int)
   }
   return &CacheAerospike{
       connect: client,
-      URL: URL,
+      URL: uri,
       Namespace: namespace,
       wpolicy: wpolicy,
       rpolicy: rpolicy,

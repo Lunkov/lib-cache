@@ -66,8 +66,8 @@ func (c *CacheMap) Get(k string, obj interface{}) (interface{}, bool)  {
 		}
 	}
   if glog.V(9) {
-    glog.Infof("LOG: memGet3: (ok = %v) item=%v\n", ok, item.Object)
-    glog.Infof("LOG: memGet4: (ok = %v) item=%v\n", ok, obj)
+    glog.Infof("LOG: memGet3: (ok = %v) item=%v", ok, item.Object)
+    glog.Infof("LOG: memGet4: (ok = %v) item=%v", ok, obj)
   }
 	return item.Object, true
 }
@@ -76,7 +76,7 @@ func (c *CacheMap) Remove(k string) {
   _, ok := c.items[k]
   if ok {
     if glog.V(9) {
-      glog.Infof("LOG: memRemove: (ok = %v) item=%v\n", ok, k)
+      glog.Infof("LOG: memRemove: (ok = %v) item=%v", ok, k)
     }
     delete(c.items, k);
   }
@@ -101,7 +101,7 @@ func (c *CacheMap) ClearOld() {
   }
 }
 
-func newMap(mode string, expiryTime int64, URL string, MaxConnections int) ICache {
+func newMap(mode string, expiryTime int64, uri string, maxConnections int) ICache {
  	c := &CacheMap{
 		Cache: Cache{ defaultExpiration:  expiryTime},
     items:                    make(map[string]Item),

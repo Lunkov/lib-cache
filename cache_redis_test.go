@@ -56,11 +56,6 @@ func TestCacheRedis(t *testing.T) {
   assert.Equal(t, count_1, c1.Count())
   assert.Equal(t, true, c1.Check(sessionToken))
 
-  //needJson := "{\"sdfsd-2345345-sdgfsdf--345\":{\"AuthCode\":\"\",\"TimeLogin\":\"0001-01-01T00:00:00Z\",\"avatar\":\"\",\"display_name\":\"\",\"email\":\"max1@aaa.ru\",\"groups\":[\"g1\",\"g2\"],\"id\":\"00000002-0003-0004-1105-000000000001\",\"login\":\"Max1\",\"role\":\"\"}}"  
-  // TODO
-  //resJson := string(c1.GetAll2JSON(Person{}))
-  //assert.Equal(t, needJson, resJson)
-
   c1.Remove(sessionToken)
   //time.Sleep(2 * time.Second)
   assert.Equal(t, int64(0), c1.Count())

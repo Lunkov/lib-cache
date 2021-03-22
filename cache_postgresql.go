@@ -38,9 +38,9 @@ func (c *CachePostgreSQL) GetMode() string {
   return "postgresql"
 }
 
-////
-// mongoDB Cache
-////
+//
+// PostgreSQL Cache
+//
 
 func (c *CachePostgreSQL) Set(key string, x interface{}) {
   if c.connect == nil {
@@ -118,14 +118,14 @@ func (c *CachePostgreSQL) GetAll2JSON(x interface{}) []byte {
   return []byte("[]")
 }
 
-func newPostgreSQL(mode string, expiryTime int64, URL string, MaxConnections int) ICache {
-  u, erru := url.Parse(URL)
+func newPostgreSQL(mode string, expiryTime int64, uri string, maxConnections int) ICache {
+  u, erru := url.Parse(uri)
   if erru != nil {
-    glog.Errorf("ERR: CACHE: POSTGRESQL: URL(%s): %s", URL, erru)
+    glog.Errorf("ERR: CACHE: POSTGRESQL: URL(%s): %s", uri, erru)
     return nil
   }
   if u.Scheme != "postgre" {
-    glog.Errorf("ERR: CACHE: POSTGRESQL: URL(%s): Scheme != aerospike", URL)
+    glog.Errorf("ERR: CACHE: POSTGRESQL: URL(%s): Scheme != aerospike", uri)
     return nil
   }
   namespace := u.Path
@@ -134,7 +134,7 @@ func newPostgreSQL(mode string, expiryTime int64, URL string, MaxConnections int
   }
   ars := strings.Split(namespace, "/")
   if len(ars) != 2 {
-    glog.Errorf("ERR: CACHE: POSTGRESQL: PARSE URL(%s) -> %v", URL, ars)
+    glog.Errorf("ERR: CACHE: POSTGRESQL: PARSE URL(%s) -> %v", uri, ars)
     return nil
   }
   host, port, _ := net.SplitHostPort(u.Host)
