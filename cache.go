@@ -5,6 +5,13 @@ import (
   "github.com/golang/glog"
 )
 
+type CacheConfig struct {
+  Mode            string     `yaml:"mode"`
+  ExpiryTime      int64      `yaml:"expiry_time"`
+  Url             string     `yaml:"url"`
+  MaxConnections  int        `yaml:"max_connections"`
+}
+
 type ICache interface {
   HasError() bool
   GetMode() string
@@ -46,6 +53,10 @@ func (c *Cache) Close() {}
 //
 // Init
 //
+func NewConfig(cfg *CacheConfig) ICache {
+  return New(cfg.Mode, cfg.ExpiryTime, cfg.Url, cfg.MaxConnections)
+}
+
 func New(mode string, expiryTime int64, url string, maxConnections int) ICache {
   glog.Infof("LOG: CACHE: Init (mode=%s, ExpiryTime=%d)", mode, expiryTime)
   if expiryTime == 0 {
