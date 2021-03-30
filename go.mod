@@ -9,9 +9,11 @@ require (
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/google/uuid v1.2.0
 	github.com/jasonlvhit/gocron v0.0.1
+	github.com/jinzhu/copier v0.2.8
 	github.com/jinzhu/gorm v1.9.16
 	github.com/lib/pq v1.1.1
 	github.com/stretchr/testify v1.7.0
 	github.com/yuin/gopher-lua v0.0.0-20200816102855-ee81675732da // indirect
 	go.mongodb.org/mongo-driver v1.5.0
+	gopkg.in/yaml.v2 v2.2.8
 )

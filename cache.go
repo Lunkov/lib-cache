@@ -65,8 +65,6 @@ func New(mode string, expiryTime int64, url string, maxConnections int) ICache {
   switch mode {
     case "map":
         return newMap(mode, expiryTime, url, maxConnections)
-    case "mutexmap":
-        return newMutexMap(mode, expiryTime, url, maxConnections)
     case "syncmap":
         return newSyncMap(mode, expiryTime, url, maxConnections)
     case "redis":
@@ -78,6 +76,10 @@ func New(mode string, expiryTime int64, url string, maxConnections int) ICache {
 //        return newMongoDB(mode, expiryTime, url, maxConnections)
     case "postgresql":
         return newPostgreSQL(mode, expiryTime, url, maxConnections)
+
+    case "mutexmap":
+    default:
+        return newMutexMap(mode, expiryTime, url, maxConnections)
   }
   return nil
 }
