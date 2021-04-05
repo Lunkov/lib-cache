@@ -48,16 +48,10 @@ func (c *CacheMutexMap) Check(k string) bool {
 func (c *CacheMutexMap) Get(k string, obj interface{}) (interface{}, bool)  {
   c.mu.RLock()
   item, ok := c.items[k]
-  if glog.V(9) {
-    glog.Infof("DBG: memGet1: (ok = %v) item=%v\n", ok, item)
-  }
   if !ok {
 		c.mu.RUnlock()
 		return nil, false
 	}
-  if glog.V(9) {
-    glog.Infof("DBG: memGet2: (ok = %v) item=%v", ok, item)
-  }
   if item.Expiration > 0 {
 		if time.Now().UnixNano() > item.Expiration {
 			c.mu.RUnlock()
@@ -65,10 +59,6 @@ func (c *CacheMutexMap) Get(k string, obj interface{}) (interface{}, bool)  {
 		}
 	}
 	c.mu.RUnlock()
-  if glog.V(9) {
-    glog.Infof("LOG: memGet3: (ok = %v) item=%v", ok, item.Object)
-    glog.Infof("LOG: memGet4: (ok = %v) item=%v", ok, obj)
-  }
 	return item.Object, true
 }
 
