@@ -102,7 +102,9 @@ func newMutexMap(mode string, expiryTime int64, uri string, maxConnections int) 
     itemsStr:                 make(map[string]ItemStr),
 	}
 
-  go c.initCron()
+  if expiryTime > 0 {
+    go c.initCron()
+  }
   
   return c
 }
