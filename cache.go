@@ -78,6 +78,7 @@ func New(mode string, expiryTime int64, url string, maxConnections int) ICache {
         return newPostgreSQL(mode, expiryTime, url, maxConnections)
 
     case "mutexmap":
+        return newMutexMap(mode, expiryTime, url, maxConnections)
     default:
         return newMutexMap(mode, expiryTime, url, maxConnections)
   }
